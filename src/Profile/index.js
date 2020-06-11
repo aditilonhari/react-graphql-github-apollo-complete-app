@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import RepositoryList from '../Repository';
 import Loading from '../Loading';
+import ErrorMessage from '../Error';
 
 const GET_REPOSITORIES_OF_CURRENT_USER = gql`
   {
@@ -38,14 +39,18 @@ const GET_REPOSITORIES_OF_CURRENT_USER = gql`
 
 function Profile() {
   const { data, error, loading } = useQuery(GET_REPOSITORIES_OF_CURRENT_USER);
-  if (loading) return 'Loading...';
-  if (error) return `Error! ${error.message}`;
-  const { viewer } = data;
-  if (loading || !viewer) {
+
+  if (loading) {
     return <Loading />;
   }
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
 
-  return <RepositoryList repositories={viewer.repositories} />;
+  if (data) {
+    const { viewer } = data;
+    return <RepositoryList repositories={viewer.repositories} />;
+  }
 }
 
 export default Profile;
