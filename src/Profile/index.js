@@ -45,6 +45,7 @@ const Profile = () => {
       loading={loading}
       repositories={data.viewer.repositories}
       fetchMore={fetchMore}
+      entry={'viewer'}
     />
   );
 };
